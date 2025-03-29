@@ -11,19 +11,19 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "eslint": "^9.23.0",
+    "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
-    "simple-git-hooks": "^2.12.1",
     "typescript": "^5.8.2"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
   "lint-staged": {
-    "*": "pnpm lint"
+    "*": "pnpm run lint"
   }
 }
