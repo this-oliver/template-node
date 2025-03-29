@@ -6,12 +6,11 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
     commit-message:
-      prefix: "security(deps):"
+      prefix: 'security(deps):'
     # Disable version updates for npm dependencies
     open-pull-requests-limit: 0
-  

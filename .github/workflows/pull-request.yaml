@@ -11,14 +11,13 @@ jobs:
     steps:
       - name: Check PR Title
         env:
-          APPROVED_PREFIXES: "major|breaking|release|minor|feat|ft|patch|fix|docs|chore"
+          COMMIT_TYPE: 'major|breaking|release|minor|feat|ft|patch|fix|docs|chore'
           PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          echo "::notice title=Checking PR Title, $PULL_REQUEST_TITLE"
-          echo "::notice title=Referencing Approved Prefixes, $APPROVED_PREFIXES"
+          echo "::notice title=Checking PR Title Formtat, $PULL_REQUEST_TITLE"
 
-          # exit with error if pr title does not start with one of the approved prefixes such that "<prefix>: <message>"
-          if [[ ! $PULL_REQUEST_TITLE =~ ^($APPROVED_PREFIXES): ]]; then
-            echo "::error title=Invalid Pull Request Title::PR Title does not start with an approved prefix. Please use one of the following prefixes: $APPROVED_PREFIXES"
+          # check that pr follows `<type>(<scope>): <description>` format
+          if [[ ! $PULL_REQUEST_TITLE =~ ^($COMMIT_TYPE)(\([a-zA-Z0-9_-]+\))?: ]]; then
+            echo "::error title=Invalid Pull Request Title::PR Title does not follow the conventional commit format of <type>(<scope>): <description>. The type must be one of the following: $COMMIT_TYPE."
             exit 1
           fi
