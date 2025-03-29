@@ -1,11 +1,13 @@
-name: CI/CD
+name: Continuous Integration and Deployment
 on:
   pull_request:
-    types: [opened, edited, synchronize, closed]
+    types: [opened, edited, synchronize]
+    branches: [main]
+  push:
     branches: [main]
 
 jobs:
-  ci-check-lint:
+  check-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +22,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  ci-check-security:
+  check-security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +48,9 @@ jobs:
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
 
-  ci-tag-release:
-    if: github.event.pull_request.merged == true
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [check-lint, check-security]
     runs-on: ubuntu-latest
     permissions:
       contents: write # needs write permission to push tag and release
