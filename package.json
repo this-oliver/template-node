@@ -1,0 +1,26 @@
+{
+  "name": "template-node",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.6.0",
+  "description": "a template for node (ts and js) projects",
+  "author": "this-oliver",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.11.0",
+    "eslint": "^9.23.0",
+    "lint-staged": "^15.5.0",
+    "simple-git-hooks": "^2.12.1",
+    "typescript": "^5.8.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts}": "pnpm lint"
+  }
+}
