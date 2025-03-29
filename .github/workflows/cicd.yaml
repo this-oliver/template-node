@@ -12,7 +12,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: package.json
 
       - name: Install Dependencies
         run: npm install
@@ -29,22 +29,22 @@ jobs:
         id: secrets
         uses: trufflesecurity/trufflehog@v3.88.20
 
-      - name: Scan for vulnerable code 
+      - name: Scan for vulnerable code
         id: code
         uses: bearer/bearer-action@v2
         with:
           diff: true
-          severity: "critical,high"
-          exit-code: "1"
+          severity: 'critical,high'
+          exit-code: '1'
 
       - name: Scan for vulnerable dependencies
         uses: aquasecurity/trivy-action@0.28.0
         id: deps
         with:
-          scan-type: "fs"
-          scanners: "vuln,secret,misconfig"
-          severity: "CRITICAL,HIGH"
-          exit-code: "1"
+          scan-type: fs
+          scanners: 'vuln,secret,misconfig'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
 
   ci-tag-release:
     if: github.event.pull_request.merged == true
@@ -54,12 +54,12 @@ jobs:
 
       - name: Bump version and push tag
         id: tag
-        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b #v6.2
+        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create a GitHub release
-        uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 #v1.16.0
+        uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 # v1.16.0
         with:
           tag: ${{ steps.tag.outputs.new_tag }}
           name: Release ${{ steps.tag.outputs.new_tag }}

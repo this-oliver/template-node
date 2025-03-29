@@ -24,6 +24,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{ts}": "pnpm lint"
+    "*": "pnpm lint"
   }
 }

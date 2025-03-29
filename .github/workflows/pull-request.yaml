@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check PR Title
         env:
-          COMMIT_TYPE: "major|breaking|release|minor|feat|ft|patch|fix|docs|chore"
+          COMMIT_TYPE: 'major|breaking|release|minor|feat|ft|patch|fix|docs|chore'
           PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
         run: |
           echo "::notice title=Checking PR Title Formtat, $PULL_REQUEST_TITLE"
