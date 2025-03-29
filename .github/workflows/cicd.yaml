@@ -49,6 +49,8 @@ jobs:
   ci-tag-release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # needs write permission to push tag and release
     steps:
       - uses: actions/checkout@v4
 
