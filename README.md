@@ -1,5 +1,7 @@
 # README
 
+[![CI/CD](https://github.com/this-oliver/template-node/actions/workflows/cicd.yaml/badge.svg)](https://github.com/this-oliver/template-node/actions/workflows/cicd.yaml)
+
 This is a template for javascript or typescript projects.
 
 Apart from the usual stuff, the repo also includes:
