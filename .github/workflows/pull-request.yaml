@@ -1,0 +1,24 @@
+name: Pull Request Reviewer
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main]
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title
+        env:
+          APPROVED_PREFIXES: "major|breaking|release|minor|feat|ft|patch|fix|docs|chore"
+          PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "::notice title=Checking PR Title, $PULL_REQUEST_TITLE"
+          echo "::notice title=Referencing Approved Prefixes, $APPROVED_PREFIXES"
+
+          # exit with error if pr title does not start with one of the approved prefixes such that "<prefix>: <message>"
+          if [[ ! $PULL_REQUEST_TITLE =~ ^($APPROVED_PREFIXES): ]]; then
+            echo "::error title=Invalid Pull Request Title::PR Title does not start with an approved prefix. Please use one of the following prefixes: $APPROVED_PREFIXES"
+            exit 1
+          fi

@@ -5,6 +5,9 @@
   "description": "a template for node (ts and js) projects",
   "author": "this-oliver",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=23.8.0"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc",
     "lint": "eslint .",

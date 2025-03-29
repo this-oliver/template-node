@@ -1,0 +1,47 @@
+name: CI/CD
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main]
+
+jobs:
+  ci-check-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+  ci-check-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for hard-coded secrets
+        id: secrets
+        uses: trufflesecurity/trufflehog@v3.88.20
+
+      - name: Scan for vulnerable code 
+        id: code
+        uses: bearer/bearer-action@v2
+        with:
+          diff: true
+          severity: "critical,high"
+          exit-code: "1"
+
+      - name: Scan for vulnerable dependencies
+        uses: aquasecurity/trivy-action@0.28.0
+        id: deps
+        with:
+          scan-type: "fs"
+          scanners: "vuln,secret,misconfig"
+          severity: "CRITICAL,HIGH"
+          exit-code: "1"
