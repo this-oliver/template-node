@@ -6,12 +6,18 @@ This is a template for javascript or typescript projects.
 
 Apart from the usual stuff, the repo also includes:
 
-- [git hooks for linting and formatting](package.json) with `simple-git-hooks` and `lint-staged`
 - [typescript config](tsconfig.json)
-- [github workflow with linting and security checks](.github/workflows/cicd.yaml)
-- [github dependabot config](.github/dependabot.yml)
+- [linting for code](eslint.config.mjs)
+- [linting for commits](.commitlintrc.js) that enforces [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- git hooks for lints
+- github automations for [linting and security workflows](.github/workflows/cicd.yaml) and [dependabot config](.github/dependabot.yml)
 
 ## Usage
+
+Pre-requisites:
+
+- [nodejs](https://nodejs.org/en/) v23 or later
+- [pnpm](https://pnpm.io/) v10 or later
 
 ```bash
 # Install dependencies
