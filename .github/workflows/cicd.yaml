@@ -68,11 +68,17 @@ jobs:
         run: |
           BUMP_TYPES="$BUMP_MAJOR|$BUMP_MINOR|$BUMP_PATCH"
 
-          echo "::notice title=Calculating bump type based on commit header::$COMMIT_HEADER"
+          # only get the first line of the commit message
+          COMMIT_HEADER=$(echo "$COMMIT_HEADER" | head -n 1)
+
+          echo "::notice ::Calculating bump type based on commit header..."
+          echo "::notice ::Commit Header: \"$COMMIT_HEADER\""
 
           # check that pr follows `<type>(<scope>): <description>` format
           if [[ ! $COMMIT_HEADER =~ ^($BUMP_TYPES)(\([a-zA-Z0-9_-]+\))?: ]]; then
-            echo "::error title=Invalid Commit Header::Commit Header does not follow the conventional commit format of <type>(<scope?>): <description>. The type must be one of the following: $BUMP_TYPES."
+            echo "::error ::Invalid Commit Header: Commit Header does not follow the conventional commit format of \`<type>(<scope?>): <description>\`."
+            echo "::error ::Valid <type>: $BUMP_TYPES"
+            echo "::error ::Tip: <scope> is optional."
             exit 1
           fi
 
@@ -85,16 +91,23 @@ jobs:
             BUMP='patch'
           fi
 
-          echo "::notice title=Setting bump type::$BUMP"
+          echo "::notice ::Setting bump type: $BUMP"
           echo "type=$BUMP" >> $GITHUB_OUTPUT
 
+      - name: Bump version and push tag (dry-run)
+        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ steps.bump.outputs.type }}
+          dry_run: true
+
       - name: Bump version and push tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: tag
         uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: ${{ steps.bump.outputs.type }}
-          dry_run: ${{ github.event_name != 'push' }}
 
       - name: Create a GitHub release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
