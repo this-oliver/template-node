@@ -49,7 +49,6 @@ jobs:
           exit-code: '1'
 
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [check-lint, check-security]
     runs-on: ubuntu-latest
     permissions:
@@ -57,13 +56,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set bump type
+        id: bump
+        env:
+          # seem .commitlint for more details
+          BUMP_MAJOR: 'major|breaking'
+          BUMP_MINOR: 'minor|feat|ft'
+          BUMP_PATCH: 'patch|fix|docs|chore'
+          # set commit header as pr title if event is pull_request otherwise use latest commit message
+          COMMIT_HEADER: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event.head_commit.message }}
+        run: |
+          BUMP_TYPES="$BUMP_MAJOR|$BUMP_MINOR|$BUMP_PATCH"
+
+          echo "::notice title=Calculating bump type based on commit header::$COMMIT_HEADER"
+
+          # check that pr follows `<type>(<scope>): <description>` format
+          if [[ ! $COMMIT_HEADER =~ ^($BUMP_TYPES)(\([a-zA-Z0-9_-]+\))?: ]]; then
+            echo "::error title=Invalid Commit Header::Commit Header does not follow the conventional commit format of <type>(<scope?>): <description>. The type must be one of the following: $BUMP_TYPES."
+            exit 1
+          fi
+
+          # set bump based on commit header
+          if [[ $COMMIT_HEADER =~ ^($BUMP_MAJOR)(\([a-zA-Z0-9_-]+\))?: ]]; then
+            BUMP='major'
+          elif [[ $COMMIT_HEADER =~ ^($BUMP_MINOR)(\([a-zA-Z0-9_-]+\))?: ]]; then
+            BUMP='minor'
+          else
+            BUMP='patch'
+          fi
+
+          echo "::notice title=Setting bump type::$BUMP"
+          echo "type=$BUMP" >> $GITHUB_OUTPUT
+
       - name: Bump version and push tag
         id: tag
         uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: ${{ steps.bump.outputs.type }}
+          dry_run: ${{ github.event_name != 'push' }}
 
       - name: Create a GitHub release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: ncipollo/release-action@440c8c1cb0ed28b9f43e4d1d670870f059653174 # v1.16.0
         with:
           tag: ${{ steps.tag.outputs.new_tag }}

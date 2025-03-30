@@ -9,15 +9,20 @@ jobs:
   check-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Check PR Title
+      - name: Check Pull Request Title
         env:
-          COMMIT_TYPE: 'major|breaking|release|minor|feat|ft|patch|fix|docs|chore'
+          # seem .commitlint for more details
+          BUMP_MAJOR: 'major|breaking'
+          BUMP_MINOR: 'minor|feat|ft'
+          BUMP_PATCH: 'patch|fix|docs|chore'
           PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          echo "::notice title=Checking PR Title Formtat, $PULL_REQUEST_TITLE"
+          BUMP_TYPES="$BUMP_MAJOR|$BUMP_MINOR|$BUMP_PATCH"
+
+          echo "::notice title=Checking for Conventional Commit Format in Pull Request Title::$PULL_REQUEST_TITLE"
 
           # check that pr follows `<type>(<scope>): <description>` format
-          if [[ ! $PULL_REQUEST_TITLE =~ ^($COMMIT_TYPE)(\([a-zA-Z0-9_-]+\))?: ]]; then
-            echo "::error title=Invalid Pull Request Title::PR Title does not follow the conventional commit format of <type>(<scope>): <description>. The type must be one of the following: $COMMIT_TYPE."
+          if [[ ! $PULL_REQUEST_TITLE =~ ^($BUMP_TYPES)(\([a-zA-Z0-9_-]+\))?: ]]; then
+            echo "::error title=Invalid Pull Request Title::Pull Request Title does not follow the conventional commit format of <type>(<scope?>): <description>. The type must be one of the following: $BUMP_TYPES."
             exit 1
           fi
