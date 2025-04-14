@@ -1,6 +1,21 @@
+# Possible relevant ecosystems:
+# - npm
+# - github-actions
+# - docker
+# - pip
+# - helm
+# - terraform
+
 version: 2
 updates:
   - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: 'security(deps):'
+    open-pull-requests-limit: 0 # Disable version updates for npm dependencies
+  - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
