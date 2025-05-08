@@ -1,8 +1,10 @@
-# Example configuration file that:
-#  - Has a private registry
-#  - Ignores lodash dependency
-#  - Disables version-updates
-#  - Defines a group by package name, for security updates for golang dependencies
+# Possible relevant ecosystems:
+# - npm
+# - github-actions
+# - docker
+# - pip
+# - helm
+# - terraform
 
 version: 2
 updates:
@@ -12,5 +14,11 @@ updates:
       interval: daily
     commit-message:
       prefix: 'security(deps):'
-    # Disable version updates for npm dependencies
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 0 # Disable version updates for npm dependencies
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: 'security(deps):'
+    open-pull-requests-limit: 0 # Disable version updates for npm dependencies
