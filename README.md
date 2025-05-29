@@ -1,6 +1,6 @@
 # README
 
-[![CI/CD](https://github.com/this-oliver/template-node/actions/workflows/cicd.yaml/badge.svg)](https://github.com/this-oliver/template-node/actions/workflows/cicd.yaml)
+[![CI](https://github.com/this-oliver/template-node/actions/workflows/ci.yaml/badge.svg)](https://github.com/this-oliver/template-node/actions/workflows/ci.yaml) [![CD](https://github.com/this-oliver/template-node/actions/workflows/cd.yaml/badge.svg)](https://github.com/this-oliver/template-node/actions/workflows/cd.yaml)
 
 This is a template for javascript or typescript projects.
 
