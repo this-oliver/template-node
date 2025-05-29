@@ -13,12 +13,13 @@ updates:
     schedule:
       interval: daily
     commit-message:
-      prefix: 'security(deps):'
+      prefix: 'chore(security):'
     open-pull-requests-limit: 0 # Disable version updates for npm dependencies
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
     commit-message:
-      prefix: 'security(deps):'
+      prefix: 'chore(security):'
     open-pull-requests-limit: 0 # Disable version updates for npm dependencies
