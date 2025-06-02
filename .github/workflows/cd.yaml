@@ -8,6 +8,7 @@ jobs:
   release:
     outputs:
       tag: ${{ steps.release.outputs.version }}
+      released: ${{ steps.release.outputs.releases_created}}
     runs-on: ubuntu-latest
     # see https://github.com/googleapis/release-please-action/tree/a02a34c4d625f9be7cb89156071d8567266a2445/?tab=readme-ov-file#workflow-permissions
     permissions:
@@ -20,3 +21,13 @@ jobs:
         uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445 # v4.2.0
         with:
           release-type: simple
+
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
+    if: needs.release.outputs.released == 'true'
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Deploying version ${{ needs.release.outputs.tag }} to production"
+          # Add your deployment commands here, e.g., npm run deploy
