@@ -7,7 +7,7 @@ on:
 jobs:
   release:
     outputs:
-      tag: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag_name }}
       released: ${{ steps.release.outputs.releases_created}}
     runs-on: ubuntu-latest
     # see https://github.com/googleapis/release-please-action/tree/a02a34c4d625f9be7cb89156071d8567266a2445/?tab=readme-ov-file#workflow-permissions
